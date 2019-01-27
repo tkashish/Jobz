@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, Animated, TouchableOpacity, Easing, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
+import _ from 'lodash';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const navigationList = ['map', 'review',];
+const COLOR = '#6666ff';
 
 class TouchableWithoutOpacity extends Component {
     render() {
@@ -28,11 +30,16 @@ class NavigatableScreen extends Component {
                 this.hide();
             }
         );
+        this.rendered = false;
     }
 
     componentWillMount() {
         this.ShowMenuAnim = new Animated.Value(1);
         this.hide();
+    }
+
+    componentDidUpdate() {
+        this.rendered = true;
     }
 
     show = () => {
@@ -56,7 +63,7 @@ class NavigatableScreen extends Component {
     renderNavigationList = (item) => {
         return (
             <TouchableWithoutFeedback onPress={() => this.props.navigate(item, this.hide)}>
-                <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.08), fontWeight: '300', marginTop: SCREEN_HEIGHT * 0.05 }}>{item}</Text>
+                <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.08), fontWeight: '300', marginTop: SCREEN_HEIGHT * 0.05, color: '#8080ff' }}>{_.capitalize(item)}</Text>
             </TouchableWithoutFeedback>
         );
     }
@@ -89,7 +96,7 @@ class NavigatableScreen extends Component {
         return (
             <View style={styles.screenStyle}>
                 <Animated.View style={{ left: listPosition, paddingTop: SCREEN_HEIGHT * 0.1, paddingLeft: SCREEN_WIDTH * 0.05, width: SCREEN_WIDTH * 0.7 }}>
-                    <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.2), fontWeight: 'bold', marginBottom: 30 }}>Jobz</Text>
+                    <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.2), fontWeight: 'bold', marginBottom: 30, color: '#4d4dff' }}>Jobz</Text>
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={navigationList}
@@ -105,6 +112,8 @@ class NavigatableScreen extends Component {
                 </AnimatedTouchable>
                 <Animated.View style={[styles.iconStyle, { left: iconPosition }]}>
                     <Icon
+                        color='#fff'
+                        underlayColor={COLOR}
                         name='menu'
                         onPress={this.show}
                         size={SCREEN_HEIGHT * 0.05}
@@ -122,14 +131,14 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#e6f9ff',
+        backgroundColor: '#ffffff',
         width: SCREEN_WIDTH * 2
     },
     iconStyle: {
         position: 'absolute',
         top: SCREEN_HEIGHT * 0.05,
         left: 0,
-        backgroundColor: '#ccf2ff',
+        backgroundColor: COLOR,
         height: SCREEN_HEIGHT * 0.07,
         width: SCREEN_WIDTH * 0.15,
         borderTopRightRadius: SCREEN_WIDTH / 20,

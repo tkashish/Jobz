@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, ActivityIndicator, Dimensions, StatusBar } from 'react-native';
+import { View, ActivityIndicator, Dimensions } from 'react-native';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
@@ -14,12 +14,6 @@ const BUTTON_COLOR = '#6666ff';
 
 class MapScreen extends Component {
     state = {
-        region: {
-            latitude: 37,
-            longitude: -122,
-            latitudeDelta: 0.09,
-            longitudeDelta: 0.04,
-        },
         mapLoaded: false
     }
 
@@ -28,13 +22,11 @@ class MapScreen extends Component {
     }
 
     onRegionChangeComplete = region => {
-        console.log("rending map");
-        
-        this.setState({ region })
+        this.props.updateCurrentRegion(region);
     }
 
     onButtonPress = () => {
-        this.props.fetchJobs(this.state.region, this.props.navigation.navigate)
+        this.props.fetchJobs(this.props.navigation.navigate)
     }
 
     navigateTo = (route, restoreCurrentScreen) => {
@@ -49,20 +41,25 @@ class MapScreen extends Component {
     render() {
         if (!this.state.mapLoaded) {
             return (
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <ActivityIndicator></ActivityIndicator>
-                </View>
+                <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <ActivityIndicator></ActivityIndicator>
+                    </View>
+                </NavigatableScreen >
             );
         }
-        console.log("rendering");
-        
+
         return (
-            // <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
+            <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
                 <View style={{ flex: 1, width: width, justifyContent: 'center', alignItems: 'center' }}>
-                    <StatusBar translucent />
                     <MapView
                         style={{ flex: 1, width: width }}
-                        initialRegion={this.state.region}
+                        initialRegion={{
+                            latitude: 37,
+                            longitude: -122,
+                            latitudeDelta: 0.09,
+                            longitudeDelta: 0.04,
+                        }}
                         onRegionChangeComplete={this.onRegionChangeComplete}
                     />
                     <View style={styles.container}>
@@ -77,7 +74,7 @@ class MapScreen extends Component {
                     </View>
                 </View>
 
-            // </NavigatableScreen>
+            </NavigatableScreen>
         );
     }
 }
@@ -100,5 +97,4 @@ const styles = {
     }
 };
 
-//make this component available to the app
 export default connect(null, actions)(MapScreen);

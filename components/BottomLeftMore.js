@@ -62,7 +62,7 @@ class BottomLeftMore extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View>
                 {this.props.children}
                 {this.renderOtherIcons()}
                 <TouchableOpacity
@@ -78,12 +78,6 @@ class BottomLeftMore extends Component {
 
 // define your styles
 const styles = {
-    container: {
-        height: height * 0.9 ,
-        width: width,
-        position: 'absolute',
-
-    },
     moreVertStyle: {
         position: 'absolute',
         alignItems: 'center',

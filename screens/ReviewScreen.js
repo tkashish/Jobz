@@ -13,29 +13,6 @@ const width = Dimensions.get('window').width;
 const BUTTON_COLOR = '#6666ff';
 
 class ReviewScreen extends Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-            title: 'ReviewJobs',
-            headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize: height * 0.03
-            },
-            headerLeft: <Button
-                title="Map"
-                textStyle={{
-                    fontWeight: '500',
-                    fontSize: height * 0.025
-                }}
-                onPress={() => navigation.navigate('map')}
-                backgroundColor="rgba(0,0,0,0)"
-                color={BUTTON_COLOR}
-            />,
-            headerStyle: {
-                marginTop: Platform.OS === 'android' ? 24 : 0,
-                height: height * 0.07,
-            }
-        };
-    };
 
     renderLikedJobs = () => {
         if (!this.props.jobs || this.props.jobs.length == 0) {
@@ -72,26 +49,32 @@ class ReviewScreen extends Component {
         this.props.navigation.navigate(route)
     }
 
-    render() {
-        return (
-            // <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
+    componentWillMount(){
+        console.log("ReviewScreen will mount");
+    }
 
+    componentWillUpdate(){
+        console.log("ReviewScreen will update");
+    }
+
+    render() {
+        console.log("ReviewScreen rendering");
+        
+        return (
+            <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
                 <View style={{ flex: 1, width: width, justifyContent: 'center', alignItems: 'center' }}>
-                    <StatusBar hidden />
                     <BottomLeftMore
                         buttons={[
                             this.buttonProp(this.onPressButton1, 'delete'),
                             this.buttonProp(this.onPressButton2, 'done'),
-                            this.buttonProp(this.onPressButton1, 'delete'),
-                            this.buttonProp(this.onPressButton2, 'done'),
                         ]}
                     >
-                        <ScrollView contentContainerStyle={styles.container}>
+                        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                             {this.renderLikedJobs()}
                         </ScrollView>
                     </BottomLeftMore>
                 </View>
-            // </NavigatableScreen>
+            </NavigatableScreen>
         );
     }
 }
@@ -102,8 +85,6 @@ navigate = () => {
 }
 
 const styles = {
-    container: {
-    },
     buttonStyle: {
         width: width * 0.6,
         borderRadius: 50
