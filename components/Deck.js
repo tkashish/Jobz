@@ -94,9 +94,6 @@ class Deck extends Component {
 
     componentDidUpdate() {
         console.log("Deck: component did update");
-        console.log(this.state.index);
-        console.log(this.props.data.length);
-
         if (this.state.index >= this.props.data.length) {
             if (this.state.index) {
                 this.setState({ index: 0 });
@@ -117,9 +114,6 @@ class Deck extends Component {
 
     renderCards() {
         console.log("Deck: renderCards");
-        console.log(this.state.index);
-        console.log(this.props.data.length);
-
         if (this.state.index >= this.props.data.length) {
             console.log("Deck render cards same length");
             return null;

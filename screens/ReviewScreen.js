@@ -1,11 +1,11 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Text, Dimensions, Platform, ScrollView, Image, Linking, StatusBar } from 'react-native';
-import { Button, Card, Icon } from 'react-native-elements';
+import { View, Dimensions, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import BottomLeftMore from '../components/BottomLeftMore';
 import JobReviewCard from '../components/JobReviewCard';
 import NavigatableScreen from '../components/NavigatableScreen';
+import * as actions from '../actions';
 
 // create a component
 const height = Dimensions.get('window').height;
@@ -27,10 +27,7 @@ class ReviewScreen extends Component {
 
     onPressButton1 = () => {
         console.log("onPressButton1");
-    }
-
-    onPressButton2 = () => {
-        console.log("onPressButton2");
+        this.props.clearJobs();
     }
 
     buttonProp = (onPress, iconName) => {
@@ -49,24 +46,31 @@ class ReviewScreen extends Component {
         this.props.navigation.navigate(route)
     }
 
-    componentWillMount(){
+    componentWillMount() {
         console.log("ReviewScreen will mount");
     }
 
-    componentWillUpdate(){
+    componentWillUpdate() {
         console.log("ReviewScreen will update");
     }
 
     render() {
         console.log("ReviewScreen rendering");
-        
+        if (this.props.jobs.length == 0) {
+            return (
+                <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
+                    <View style={{ flex: 1, width: width, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text>No jobs selected</Text>
+                    </View>
+                </NavigatableScreen>
+            );
+        }
         return (
             <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
                 <View style={{ flex: 1, width: width, justifyContent: 'center', alignItems: 'center' }}>
                     <BottomLeftMore
                         buttons={[
                             this.buttonProp(this.onPressButton1, 'delete'),
-                            this.buttonProp(this.onPressButton2, 'done'),
                         ]}
                     >
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -104,4 +108,4 @@ mapStateToProps = (state) => {
         jobs: state.likedJobs
     }
 }
-export default connect(mapStateToProps)(ReviewScreen);
+export default connect(mapStateToProps, actions)(ReviewScreen);

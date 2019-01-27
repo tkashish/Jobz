@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, ActivityIndicator, Dimensions } from 'react-native';
+import { View, ActivityIndicator, Dimensions, Modal, Text } from 'react-native';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
@@ -14,41 +14,58 @@ const BUTTON_COLOR = '#6666ff';
 
 class MapScreen extends Component {
     state = {
-        mapLoaded: false
+        mapLoaded: false,
+        noJobFound: false,
+    }
+
+    constructor(props) {
+        super(props)
+        this.noJobFound = false;
     }
 
     componentDidMount() {
         this.setState({ mapLoaded: true });
+        this.setState({ noJobFound: false });
     }
 
     onRegionChangeComplete = region => {
         this.props.updateCurrentRegion(region);
     }
 
-    onButtonPress = () => {
-        this.props.fetchJobs(this.props.navigation.navigate)
+    onButtonPress = async () => {
+        this.setState({ mapLoaded: false, noJobFound: false });
+        s = await this.props.fetchJobs(this.props.navigation.navigate);
+        this.setState({ mapLoaded: true });
+        if (s !== undefined) {
+            this.setState({ noJobFound: true });
+        }
     }
 
     navigateTo = (route, restoreCurrentScreen) => {
         console.log("navigating to " + route);
         if (route == 'map') {
-            restoreCurrentScreen()
+            restoreCurrentScreen();
             return
         }
-        this.props.navigation.navigate(route)
+        this.props.navigation.navigate(route);
     }
 
     render() {
+        console.log("MapScreen render");
         if (!this.state.mapLoaded) {
             return (
-                <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
-                        <ActivityIndicator></ActivityIndicator>
-                    </View>
-                </NavigatableScreen >
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <ActivityIndicator></ActivityIndicator>
+                </View>
             );
         }
-
+        noJobFoundNotification = null
+        if (this.state.noJobFound) {
+            noJobFoundNotification =
+                <View style={styles.noJobMessageContainerStyle}>
+                    <Text style={styles.noJobMessageTextStyle}>No jobs found in this area</Text>
+                </View>
+        }
         return (
             <NavigatableScreen navigation={this.props.navigation} navigate={this.navigateTo} style={{ backgroundColor: '#fff' }}>
                 <View style={{ flex: 1, width: width, justifyContent: 'center', alignItems: 'center' }}>
@@ -63,6 +80,7 @@ class MapScreen extends Component {
                         onRegionChangeComplete={this.onRegionChangeComplete}
                     />
                     <View style={styles.container}>
+                        {noJobFoundNotification}
                         <Button
                             large
                             title="Search this area"
@@ -84,16 +102,30 @@ const styles = {
     container: {
         position: 'absolute',
         bottom: 20,
-        left: 0,
-        right: 0
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     buttonStyle: {
+        width: width * 0.95,
         borderRadius: 50,
         backgroundColor: BUTTON_COLOR
     },
     buttonTitleStyle: {
         fontWeight: "500",
         fontSize: height * 0.03,
+    },
+    noJobMessageContainerStyle: {
+        width: width * 0.5,
+        bottom: 10,
+        backgroundColor: '#ff9999',
+        height: height * 0.04,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: height * 0.1
+    },
+    noJobMessageTextStyle: {
+        color: '#fff',
+        fontSize: height * 0.02,
     }
 };
 
