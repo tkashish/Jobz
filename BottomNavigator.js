@@ -16,29 +16,29 @@ const MainNavigator = createBottomTabNavigator({
     auth: {
         screen: AuthScreen,
         navigationOptions: {
-            header: null,
             tabBarVisible: false
         }
     },
     main: {
-        screen: createStackNavigator({
-            map: {
-                screen: MapScreen
-            },
-            deck: {
-                screen: DeckScreen
-            },
-            review: {
-                screen: createStackNavigator({
-                    review: { screen: ReviewScreen },
-                    settings: { screen: SettingsScreen }
-                }),
-            }
-        },
+        screen: createBottomTabNavigator(
             {
-                headerMode: 'none',
-                navigationOptions: {
-                    headerVisible: false,
+                map: {
+                    screen: MapScreen,
+                    navigationOptions: {
+                        tabBarVisible: false
+                    }
+                },
+                deck: {
+                    screen: DeckScreen,
+                    navigationOptions: {
+                        tabBarVisible: false
+                    }
+                },
+                review: {
+                    screen: ReviewScreen,
+                    navigationOptions: {
+                        tabBarVisible: false
+                    }
                 }
             }
         ),

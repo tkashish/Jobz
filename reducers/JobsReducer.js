@@ -5,7 +5,7 @@ export default (state = [], action) => {
 
         case FETCH_JOBS:
             return action.payload;
-
+            
         default:
             return state
     }

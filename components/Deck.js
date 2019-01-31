@@ -55,7 +55,7 @@ class Deck extends Component {
 
     componentWillUpdate() {
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-        LayoutAnimation.spring();
+        LayoutAnimation.linear();
     }
 
     forceSwipe(direction) {
@@ -95,14 +95,27 @@ class Deck extends Component {
     componentDidUpdate() {
         console.log("Deck: component did update");
         if (this.state.index >= this.props.data.length) {
-            this.setState({ index: 0 })
+            if (this.state.index) {
+                this.setState({ index: 0 });
+            }
+            this.props.renderNoMoreCards();
+        }
+    }
+
+    componentDidMount() {
+        console.log("Deck: component did mount");
+        if (this.state.index >= this.props.data.length) {
+            if (this.state.index) {
+                this.setState({ index: 0 });
+            }
             this.props.renderNoMoreCards();
         }
     }
 
     renderCards() {
-
+        console.log("Deck: renderCards");
         if (this.state.index >= this.props.data.length) {
+            console.log("Deck render cards same length");
             return null;
         }
         return this.props.data.map((item, index) => {
@@ -140,6 +153,7 @@ class Deck extends Component {
     }
 
     render() {
+        console.log("Deck rendering");
         return (
             this.renderCards()
         );

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 import Geocoder from 'react-native-geocoding';
-import { FETCH_JOBS, LIKE_JOB } from './types';
+import { FETCH_JOBS, LIKE_JOB, CLEAR_JOBS } from './types';
+import { store } from '../store';
 
 const GITHUB_JOBS_ROOT_API = 'https://jobs.github.com/positions.json';
 const GOOGLE_MAPS_API_KEY = 'AIzaSyAQjzSNxlUQ0kTwwB_eLe7ItDNSYme4tkM'
@@ -26,14 +27,14 @@ const updateJob = async (job) => {
     }
 }
 
-export const fetchJobs = ({ latitude, longitude }, navigate) => async dispatch => {
+export const fetchJobs = (navigate) => async dispatch => {
     try {
-
+        const { latitude, longitude } = store.getState().region;
         let result = await Geocoder.from({ latitude, longitude });
-        if (!result.results[0] || !result.results[0].address_components[6]){
+        if (!result.results[0] || !result.results[0].address_components[6]) {
             console.log('cannot find location');
             console.log(result.results[0].address_components[6]);
-            
+
             return;
         }
         let zip = result.results[0].address_components[6].long_name;
@@ -44,6 +45,9 @@ export const fetchJobs = ({ latitude, longitude }, navigate) => async dispatch =
             type: FETCH_JOBS,
             payload: jobs
         })
+        if (!jobs.length) {
+            return false
+        }
         navigate('deck')
     } catch (error) {
         console.log(error);
@@ -54,6 +58,12 @@ export const likeJob = (job) => {
     return {
         type: LIKE_JOB,
         payload: job
+    }
+}
+
+export const clearJobs = () => {
+    return {
+        type: CLEAR_JOBS,
     }
 }
 

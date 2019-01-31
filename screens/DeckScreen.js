@@ -34,7 +34,28 @@ class DeckScreen extends Component {
         );
     }
 
+    componentWillMount() {
+        console.log("DeckScreen will mount");
+    }
+
+    componentWillUpdate() {
+        console.log("DeckScreen will update");
+    }
+
+    componentDidMount() {
+        console.log("DeckScreen did mount");
+    }
+
+    componentDidUpdate() {
+        console.log("DeckScreen did update");
+    }
+
     render() {
+        console.log("DeckScreen rendering");
+        if (this.props.jobs.length == 0) {
+            console.log("DeckScreen jobs should not be null");
+            return null;
+        }
         return (
             <View style={styles.container}>
                 <StatusBar translucent />

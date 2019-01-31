@@ -5,16 +5,16 @@ import Slides from '../components/Slides';
 import { AppLoading } from 'expo';
 
 const SLIDE_DATA = [
-    { text: 'Welcome to JobApp' },
+    { text: 'Welcome to Jobz' },
     { text: 'Use this to get a job' },
     { text: 'Set your location, then swipe away' }
 ];
 
-// create a component
 class WelcomeScreen extends Component {
     state = { token: null }
 
     async componentWillMount() {
+        console.log("WelcomeScreen componentWillMount");
         let token = await AsyncStorage.getItem('fb_token');
         if (token) {
             this.props.navigation.navigate('map')
@@ -25,10 +25,24 @@ class WelcomeScreen extends Component {
     }
 
     onSlidesComplete = () => {
-        this.props.navigation.navigate('auth')
+        console.log("WelcomeScreen Navigate to auth");
+        this.props.navigation.navigate('auth', {reauthenticate: true})
+    }
+
+    componentWillReceiveProps(nextProps) {
+        console.log("WelcomeScreen componentWillReceiveProps");
+        if (nextProps.navigation.state.params.canceled) {
+            console.log("WelcomeScreen componentWillReceiveProps canceled");
+        }
+    }
+
+    componentWillUpdate() {
+        console.log("WelcomeScreen componentWillUpdate");
     }
 
     render() {
+        console.log("WelcomeScreen render");
+
         if (_.isNull(this.state.token)) {
             <AppLoading></AppLoading>
         }
@@ -40,7 +54,6 @@ class WelcomeScreen extends Component {
     }
 }
 
-// define your styles
 const styles = {
     container: {
         flex: 1,
@@ -50,5 +63,4 @@ const styles = {
     },
 };
 
-//make this component available to the app
 export default WelcomeScreen;

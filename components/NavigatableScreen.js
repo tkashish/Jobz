@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, Dimensions, Animated, TouchableOpacity, Easing, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
+import _ from 'lodash';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const navigationList = ['map', 'review',];
+const navigationList = ['map', 'review', 'logout'];
+const COLOR = '#6666ff';
 
 class TouchableWithoutOpacity extends Component {
     render() {
@@ -54,15 +58,20 @@ class NavigatableScreen extends Component {
     }
 
     renderNavigationList = (item) => {
+        let onPressFunc = () => this.props.navigate(item, this.hide);
+        if (item == 'logout') {
+            onPressFunc = () => this.props.facebookLogout(this.props.navigate);
+        }
         return (
-            <TouchableWithoutFeedback onPress={() => this.props.navigate(item, this.hide)}>
-                <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.08), fontWeight: '300', marginTop: SCREEN_HEIGHT * 0.05 }}>{item}</Text>
+            <TouchableWithoutFeedback onPress={onPressFunc}>
+                <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.08), fontWeight: '300', marginTop: SCREEN_HEIGHT * 0.05, color: '#8080ff' }}>{_.capitalize(item)}</Text>
             </TouchableWithoutFeedback>
         );
     }
 
     render() {
-
+        console.log("Navigatable Screen Rendered");
+        
         const iconPosition = this.ShowMenuAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [SCREEN_WIDTH, -100]
@@ -89,7 +98,7 @@ class NavigatableScreen extends Component {
         return (
             <View style={styles.screenStyle}>
                 <Animated.View style={{ left: listPosition, paddingTop: SCREEN_HEIGHT * 0.1, paddingLeft: SCREEN_WIDTH * 0.05, width: SCREEN_WIDTH * 0.7 }}>
-                    <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.2), fontWeight: 'bold', marginBottom: 30 }}>Jobz</Text>
+                    <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.2), fontWeight: 'bold', marginBottom: 30, color: '#4d4dff' }}>Jobz</Text>
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={navigationList}
@@ -97,14 +106,17 @@ class NavigatableScreen extends Component {
                         keyExtractor={(item) => item}
                     />
                 </Animated.View>
-                <AnimatedTouchable
+                {/* figure out how to use touchable here */}
+                <Animated.View
                     style={[styles.containerStyle, this.props.style, { left: screenLeft, height: screenHeight, borderRadius: borderRadius }]}
                     onPress={this.hide}
                 >
                     {this.props.children}
-                </AnimatedTouchable>
+                </Animated.View>
                 <Animated.View style={[styles.iconStyle, { left: iconPosition }]}>
                     <Icon
+                        color='#fff'
+                        underlayColor={COLOR}
                         name='menu'
                         onPress={this.show}
                         size={SCREEN_HEIGHT * 0.05}
@@ -122,14 +134,14 @@ const styles = {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#e6f9ff',
+        backgroundColor: '#ffffff',
         width: SCREEN_WIDTH * 2
     },
     iconStyle: {
         position: 'absolute',
         top: SCREEN_HEIGHT * 0.05,
         left: 0,
-        backgroundColor: '#ccf2ff',
+        backgroundColor: COLOR,
         height: SCREEN_HEIGHT * 0.07,
         width: SCREEN_WIDTH * 0.15,
         borderTopRightRadius: SCREEN_WIDTH / 20,
@@ -155,4 +167,4 @@ const styles = {
     },
 };
 
-export default NavigatableScreen;
+export default connect(null, actions)(NavigatableScreen);
