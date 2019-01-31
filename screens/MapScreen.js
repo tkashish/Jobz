@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, ActivityIndicator, Dimensions, Modal, Text } from 'react-native';
+import { View, ActivityIndicator, Dimensions, Text } from 'react-native';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
 import * as actions from '../actions';

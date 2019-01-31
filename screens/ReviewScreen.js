@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, Dimensions, ScrollView, Text } from 'react-native';
+import { View, Dimensions, ScrollView, Text, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import BottomLeftMore from '../components/BottomLeftMore';
 import JobReviewCard from '../components/JobReviewCard';
@@ -73,9 +73,11 @@ class ReviewScreen extends Component {
                             this.buttonProp(this.onPressButton1, 'delete'),
                         ]}
                     >
-                        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                            {this.renderLikedJobs()}
-                        </ScrollView>
+                        <FlatList
+                            data={this.props.jobs}
+                            renderItem={({ item }) => <JobReviewCard key={item.id} job={item} />}
+                            keyExtractor={(item, index) => item.id}
+                        />
                     </BottomLeftMore>
                 </View>
             </NavigatableScreen>

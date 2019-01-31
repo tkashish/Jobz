@@ -17,6 +17,10 @@ class JobReviewCard extends Component {
     }
     render() {
         job = this.props.job;
+        console.log("rendering job: ");
+        console.log(job.id);
+        
+        
         return (
             <Card containerStyle={styles.cardSectionStyle}>
                 <View

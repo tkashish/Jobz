@@ -16,7 +16,6 @@ const MainNavigator = createBottomTabNavigator({
     auth: {
         screen: AuthScreen,
         navigationOptions: {
-            header: null,
             tabBarVisible: false
         }
     },

@@ -5,7 +5,8 @@ import { Button } from 'react-native-elements';
 
 const Screen_WIDTH = Dimensions.get('window').width;
 
-// create a component
+
+const BUTTON_COLOR = '#6666ff';
 class Slides extends Component {
 
     renderLastSlide(index) {
@@ -59,7 +60,7 @@ const styles = {
         fontSize: 40
     },
     buttonStyle: {
-        backgroundColor: '#1E90FF',
+        backgroundColor: BUTTON_COLOR,
         borderRadius: 20,
         marginTop: 40,
         width: Screen_WIDTH*0.5,

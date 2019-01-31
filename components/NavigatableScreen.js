@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions, Animated, TouchableOpacity, Easing, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-const navigationList = ['map', 'review',];
+const navigationList = ['map', 'review', 'logout'];
 const COLOR = '#6666ff';
 
 class TouchableWithoutOpacity extends Component {
@@ -61,15 +63,20 @@ class NavigatableScreen extends Component {
     }
 
     renderNavigationList = (item) => {
+        let onPressFunc = () => this.props.navigate(item, this.hide);
+        if (item == 'logout') {
+            onPressFunc = () => this.props.facebookLogout(this.props.navigate);
+        }
         return (
-            <TouchableWithoutFeedback onPress={() => this.props.navigate(item, this.hide)}>
+            <TouchableWithoutFeedback onPress={onPressFunc}>
                 <Text style={{ fontSize: Math.floor(SCREEN_WIDTH * 0.08), fontWeight: '300', marginTop: SCREEN_HEIGHT * 0.05, color: '#8080ff' }}>{_.capitalize(item)}</Text>
             </TouchableWithoutFeedback>
         );
     }
 
     render() {
-
+        console.log("Navigatable Screen Rendered");
+        
         const iconPosition = this.ShowMenuAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [SCREEN_WIDTH, -100]
@@ -104,12 +111,13 @@ class NavigatableScreen extends Component {
                         keyExtractor={(item) => item}
                     />
                 </Animated.View>
-                <AnimatedTouchable
+                {/* figure out how to use touchable here */}
+                <Animated.View
                     style={[styles.containerStyle, this.props.style, { left: screenLeft, height: screenHeight, borderRadius: borderRadius }]}
                     onPress={this.hide}
                 >
                     {this.props.children}
-                </AnimatedTouchable>
+                </Animated.View>
                 <Animated.View style={[styles.iconStyle, { left: iconPosition }]}>
                     <Icon
                         color='#fff'
@@ -164,4 +172,4 @@ const styles = {
     },
 };
 
-export default NavigatableScreen;
+export default connect(null, actions)(NavigatableScreen);

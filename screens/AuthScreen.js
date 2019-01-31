@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import { View, AsyncStorage } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 class AuthScreen extends Component {
     componentDidMount() {
-        console.log("Auth Screen");
-        
-        this.props.facebookLogin();
-        this.onAuthComplete(this.props)
-        AsyncStorage.removeItem('fb_token');
+        console.log("AuthScreen componentDidMount");
+        this.props.facebookLogin(this.props.navigation.navigate);
+        this.onAuthComplete(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params.reauthenticate) {
+            this.props.navigation.setParams({ reauthenticate: false });
+            this.props.facebookLogin(this.props.navigation.navigate);
+        }
         this.onAuthComplete(nextProps)
     }
 
@@ -30,8 +33,9 @@ class AuthScreen extends Component {
 }
 
 mapStateToProps = ({ auth }) => {
+    token = auth ? auth.token : null
     return {
-        token: auth.token
+        token
     }
 }
 export default connect(mapStateToProps, actions)(AuthScreen);
