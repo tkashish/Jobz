@@ -32,16 +32,11 @@ class NavigatableScreen extends Component {
                 this.hide();
             }
         );
-        this.rendered = false;
     }
 
     componentWillMount() {
         this.ShowMenuAnim = new Animated.Value(1);
         this.hide();
-    }
-
-    componentDidUpdate() {
-        this.rendered = true;
     }
 
     show = () => {
